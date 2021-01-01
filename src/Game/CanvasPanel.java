@@ -25,6 +25,7 @@ public class CanvasPanel extends JPanel {
     // 2) gameover
     int direction = 0;
     int Score = 0;
+//    int highscore = 0;
     long speed = 100;
 
     java.util.List<int[]> snake = new ArrayList<>();
@@ -53,6 +54,7 @@ public class CanvasPanel extends JPanel {
         RandomApple(10);
 //        grid[3][3] = 2;
     }
+
     public void restart() {
         snake = new ArrayList<>();
         grid = new int[20][20];
@@ -147,6 +149,9 @@ public class CanvasPanel extends JPanel {
             } else{
                 speed = speed - 1;
             }
+//            if (highscore <= Score){
+//                highscore += 1;
+//            }
             Score += 1;
             RandomApple(1);
             this.playsound();
@@ -204,9 +209,9 @@ public class CanvasPanel extends JPanel {
             g.setFont(old);
             g.drawString("Press r to Restart",175,240);
         }
-        g.drawString("Your Score : " + Score,180,420);
-        g.drawString("Speed: " + speed,100,420);
-
+        g.drawString("Your Score: " + Score,280,420);
+        g.drawString("Speed: " + (101-speed),140,420);
+//        g.drawString("Highscore: " + highscore, 200,420);
 
     }
 }
