@@ -14,6 +14,7 @@ public class CanvasPanel extends JPanel {
     int[][] grid = new int[20][20];
 
     BufferedImage img=null;
+    BufferedImage melon=null;
     BufferedImage east=null;
     BufferedImage north=null;
     BufferedImage south=null;
@@ -25,14 +26,16 @@ public class CanvasPanel extends JPanel {
     // 2) gameover
     int direction = 0;
     int Score = 0;
-//    int highscore = 0;
+    int highscore = 0;
     long speed = 100;
+    int difficulty = 1;
 
     java.util.List<int[]> snake = new ArrayList<>();
 
     public CanvasPanel() {
         try {
             img=ImageIO.read(CanvasPanel.class.getClassLoader().getResource("apple.png").openStream());
+            melon=ImageIO.read(CanvasPanel.class.getClassLoader().getResource("watermelon.png").openStream());
             east=ImageIO.read(CanvasPanel.class.getClassLoader().getResource("east.png").openStream());
             north=ImageIO.read(CanvasPanel.class.getClassLoader().getResource("north.png").openStream());
             south=ImageIO.read(CanvasPanel.class.getClassLoader().getResource("south.png").openStream());
@@ -51,7 +54,8 @@ public class CanvasPanel extends JPanel {
         grid[snake.get(2)[0]][snake.get(2)[1]] = 1;
         grid[snake.get(3)[0]][snake.get(3)[1]] = 1;
 
-        RandomApple(10);
+        RandomMelon(1);
+        RandomApple(5);
 //        grid[3][3] = 2;
     }
 
@@ -66,10 +70,18 @@ public class CanvasPanel extends JPanel {
         grid[snake.get(1)[0]][snake.get(1)[1]] = 1;
         grid[snake.get(2)[0]][snake.get(2)[1]] = 1;
         grid[snake.get(3)[0]][snake.get(3)[1]] = 1;
-        RandomApple(10);
+        RandomApple(5);
+        RandomMelon(1);
         Score = 0;
         direction = 0;
-        speed = 100;
+        if (difficulty == 0){
+            speed = 135;
+        } else if (difficulty == 1){
+            speed = 100;
+        } else if (difficulty == 2){
+            speed = 60;
+        }
+
     }
 
     public void playsound() {
@@ -93,7 +105,7 @@ public class CanvasPanel extends JPanel {
         for (int i=0; i<num;i++) {
             int appleX = (int)(Math.random() * 20);
             int appleY = (int)(Math.random() * 20);
-            if (grid[appleX][appleY]==1){
+            if (grid[appleX][appleY]==1 || grid[appleX][appleY]==2){
                 grid[(int)(Math.random() * 20)][(int)(Math.random() * 20)]=2;
             } else {
                 grid[appleX][appleY] = 2;
@@ -101,11 +113,23 @@ public class CanvasPanel extends JPanel {
         }
     }
 
+    public void RandomMelon(int numMelon) {
+        for (int m = 0; m < numMelon; m++) {
+            int melX = (int)(Math.random() * 20);
+            int melY = (int)(Math.random() * 20);
+            if (grid[melX][melY]==1 || grid[melX][melY]==3||  grid[melX][melY] == 2 || grid[melX][melY] == 4){
+                grid[(int)(Math.random() * 20)][(int)(Math.random() * 20)]=3;
+            } else {
+                grid[melX][melY] = 3;
+            }
+        }
+
+    }
+
     public void movenext() {
         if (gamestate == 0 || gamestate == 2){
             return;
         }
-
 
         int[] newhead = new int[2];
         newhead[0] = snake.get(0)[0];
@@ -136,24 +160,34 @@ public class CanvasPanel extends JPanel {
             return;
         }
 
-//        if (newhead[1] == -1){
-//            newhead[1]=19;
-//        }
-//        if (newhead[0] == -1){
-//            newhead[0]=19;
-//        }
-
         //apple
         if (grid[newhead[0]][newhead[1]]==2){
             if (speed == 20){
             } else{
                 speed = speed - 1;
             }
-//            if (highscore <= Score){
-//                highscore += 1;
-//            }
+            if (highscore <= Score){
+                highscore += 1;
+            }
             Score += 1;
             RandomApple(1);
+            this.playsound();
+            snake.add(tail);
+        } else {
+            grid[tail[0]][tail[1]] = 0;
+        }
+
+        //watermelon
+        if (grid[newhead[0]][newhead[1]]==3){
+            if (speed == 20){
+            } else{
+                speed = speed - 3;
+            }
+            if (highscore <= Score){
+                highscore += 3;
+            }
+            Score += 3;
+            RandomMelon(1);
             this.playsound();
             snake.add(tail);
         } else {
@@ -162,6 +196,7 @@ public class CanvasPanel extends JPanel {
         snake.add(0,newhead);
         grid[newhead[0]][newhead[1]]=1;
     }
+
 
     @Override
     protected void paintComponent(Graphics g) {
@@ -195,6 +230,8 @@ public class CanvasPanel extends JPanel {
                 }
                 if (grid[i][j]==2){//apple
                     g.drawImage(img, i * 20, j * 20, 20, 20, null);
+                } else if (grid[i][j]==3){
+                    g.drawImage(melon, i * 20, j * 20, 20, 20, null);
                 }
             }
         }
@@ -210,8 +247,8 @@ public class CanvasPanel extends JPanel {
             g.drawString("Press r to Restart",175,240);
         }
         g.drawString("Your Score: " + Score,280,420);
-        g.drawString("Speed: " + (101-speed),140,420);
-//        g.drawString("Highscore: " + highscore, 200,420);
+        g.drawString("Speed: " + (136-speed),40,420);
+        g.drawString("Highscore: " + highscore, 150,420);
 
     }
 }
