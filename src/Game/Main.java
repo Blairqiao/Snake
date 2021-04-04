@@ -11,30 +11,27 @@ import java.awt.event.KeyListener;
 import java.io.IOException;
 
 public class Main {
-    public static void main(String[] args) throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
-//        UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+    public static void main(String[] args) {
 
         int DifficultySpeed = 0;
         JFrame window = new JFrame("Snake");
-        UIManager.put("MenuBar.background", Color.CYAN);
         UIManager.put("MenuBar.foreground", Color.GREEN);
-//        UIManager.put("MenuBar.opaque", true);
+        UIManager.put("MenuItem.foreground", Color.GREEN);
         window.setPreferredSize(new Dimension(405,475));
 
         CanvasPanel canvas = new CanvasPanel();
 
         JMenuBar jMenuBar = new JMenuBar();
-//        jMenuBar.setForeground(Color.GREEN);
-//        jMenuBar.setBackground(Color.WHITE);
         window.setJMenuBar(jMenuBar);
         JMenu Difficulty = new JMenu("Difficulty");
-        Difficulty.setForeground(Color.YELLOW);
         JMenuItem Easy = Difficulty.add("Easy");
         JMenuItem Medium = Difficulty.add("Medium");
         JMenuItem Hard = Difficulty.add("Hard");
-        Difficulty.setBackground(Color.BLUE);
+        Difficulty.setBackground(Color.BLACK);
+        Easy.setBackground(Color.BLACK);
+        Medium.setBackground(Color.BLACK);
+        Hard.setBackground(Color.BLACK);
         jMenuBar.add(Difficulty);
-        Difficulty.setOpaque(true);
         Easy.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
